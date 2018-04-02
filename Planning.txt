@@ -1,0 +1,6 @@
+Master plan for the project
+
+
+Sub-problems / nodes  
+  highest level: Exploring / navigating to each room on trash sweep
+  
