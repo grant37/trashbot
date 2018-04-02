@@ -2,5 +2,7 @@ Master plan for the project
 
 
 Sub-problems / nodes  
-  highest level: Exploring / navigating to each room on trash sweep
+  - highest level: Exploring / navigating to each room on trash sweep
+  - If going room by room, Decide how to break up area (i.e. pick spots to do 360deg scan from)
+  - 
   
