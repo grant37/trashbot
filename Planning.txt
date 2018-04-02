@@ -1,8 +1,18 @@
 Master plan for the project
 
 
-Sub-problems / nodes  
-  - highest level: Exploring / navigating to each room on trash sweep
+Step-by-step outline of project  
+  - Exploring / navigating to each room on trash sweep
   - If going room by room, Decide how to break up area (i.e. pick spots to do 360deg scan from)
-  - 
+  - Navigate to a sweep spot
+  - Complete sweep and log potential trash candidates
+  - Pick a candidate to asses
+  - Navigate to candidate
+  - Asses candidate
+    * if trash, ask for pickup
+  - Go to next candidate
+  - If all candidates cleared, move to next assesment spot (repeat)
+  - If all assessment spots cleared, go to next area (repeat)
+  - If all areas cleared, finish circuit by potentially going to office for emptying trash
+ 
   
