@@ -1,0 +1,12 @@
+//using the map of Halligan that is already stored in teh github repository for the turtlebot
+
+roslaunch turtlebot_navigation amcl_demo.launch
+
+//launches rViz on the pc
+roslaunch turtlebot_rviz_launchers view_navigation.launch --screen
+
+Click "2D Pose Estimate" button
+Click where turtlebot is and drag in direction robot is pointing
+
+Click "2D Nav Goal" button
+Click on map where we want turtlebot to drive and drag in direction turtlebot should be facing at the end
