@@ -16,14 +16,14 @@
 #include <pcl/pcl_base.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
-typedef sensor_msgs::PointCloud2ConstPtr PointCloudSnsrMsg;
+typedef sensor_msgs::PointCloud2 PointCloudSnsrMsg;
 
 PointCloudSnsrMsg cloud;
 
 
 void cloudPub(const  sensor_msgs::PointCloud2ConstPtr& input)
 {
-         cloud = input;
+         cloud = *input;
 }
 
 int main(int argc, char **argv)
@@ -38,11 +38,11 @@ int main(int argc, char **argv)
 
   ros::Subscriber sub = n.subscribe("/camera/depth/points", 1, cloudPub);
   
-  ros::Rate  loop_rate(10);
+  ros::Rate  loop_rate(0.5);
   
   while(ros::ok())
   {
-          pub.publish(*cloud);
+          pub.publish(cloud);
           ros::spinOnce();
           
           loop_rate.sleep();

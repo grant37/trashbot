@@ -16,35 +16,21 @@
 #include <pcl/pcl_base.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
+#include <stdlib.h>
 //template <typename PointT> class PointCloud;
 
-void cloudPrep(const  sensor_msgs::PointCloud2ConstPtr& input);
-void planeSegmenting();
 
-int main(int argc, char **argv)
-{
-  ros::init(argc, argv, "candidate_detection");
-
-  ros::NodeHandle n;
-
-  ros::Subscriber sub = n.subscribe("segment_this_cloud", 1, cloudPrep);//keeps 1 cloud in queue to always get most recent
-
-  ros::spin();
-
-  return 0;
-}
 
 typedef pcl::PointXYZRGB PointT;
 typedef pcl::PointXYZ PointX;
 typedef pcl::PointCloud<PointT> PointCloudT;
 typedef pcl::PointCloud<PointX> PointCloudX;
 
-tf::TransformListener listener;
 
 PointCloudX::Ptr cloud (new PointCloudX);
 
 void planeSegmenting(){
-
+	  std::cerr << "Inside planeSegmenting" << std::endl;
          double distThresh = 10;
 	//Maybe z-dir pass thru filter to get rid of points higher than some threshold height?
 
@@ -85,6 +71,8 @@ void planeSegmenting(){
 
 
 	  //Is this the largest plane? Will it always detect the ground plane?
+	  
+	  std::cerr << "End planeSegmenting" << std::endl;
 }
 
 /*
@@ -94,26 +82,47 @@ Stores prepared cloud in global cloud variable
 */
 void cloudPrep(const  sensor_msgs::PointCloud2ConstPtr& input)
 {
+	  std::cerr << "Inside cloudPrep" << std::endl;
         //Convert to PCL format
-        PointCloudT inputT;
-	pcl::fromROSMsg(*input, inputT);     
-           
+        PointCloudT inputPCL;
+        
+	pcl::fromROSMsg(*input, inputPCL);     
+           std::cerr << "Converted to pcl" << std::endl;
         //Creating container for transformedCloud
 	PointCloudT transformedCloud;
 
-        //destination frame
-        const std::string destFrame = "/baselink";
+        //destination frame: /map/odom/base_footprint/base_link
+        const std::string destFrame = "/map->/odom->/base_footprint->/base_link";
         
 	//Transform to baselink frame
-	bool transformed = pcl_ros::transformPointCloud<PointT>(destFrame, inputT, transformedCloud, listener);
-        //http://docs.ros.org/kinetic/api/pcl_ros/html/namespacepcl__ros.html#aad1ce4ad90ab784aae6158419ad54d5f
+	tf::TransformListener listener;
+	//listener.waitForTransform(destFrame, inputPCL.header.frame_id, ros::Time::now(), ros::Duration(0.1));
+	bool transformed = pcl_ros::transformPointCloud<PointT>(destFrame, inputPCL, transformedCloud, listener);
+        //http://docs.ros.org/kinetic/api//html/namespacepcl__ros.html#aad1ce4ad90ab784aae6158419ad54d5f
         
 	//error catching transform
 	std::cerr<<"Transformed?: " << transformed << std::endl;
-        
-        planeSegmenting();
-  	
+	
+    if(transformedCloud.size() > 0){
+		    planeSegmenting();
+
+	}    
+  	std::cerr << "End cloudPrep" << std::endl;
 }
 
+int main(int argc, char **argv)
+{
+ 
+  ros::init(argc, argv, "candidate_detection");
+  
+  ros::NodeHandle n;
+  
+  ros::Subscriber sub = n.subscribe("segment_this_cloud", 1, cloudPrep);//keeps 1 cloud in queue to always get most recent
 
+  ros::spin();
+  
+
+
+  return 0;
+}
 
