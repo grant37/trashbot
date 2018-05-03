@@ -1,3 +1,11 @@
+#!/usr/bin/python
+
+"""
+Citation: http://blog.justsophie.com/smile-detection-using-opencv-designing-ros-node/
+
+I referenced Sophie Li's ROS blog (link above) as a guide to write this node.
+"""
+
 import roslib
 import sys
 import rospy
