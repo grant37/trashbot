@@ -12,6 +12,7 @@ import rospy
 import cv2
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
+from std_msgs import String
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from copy import deepcopy
@@ -20,10 +21,10 @@ class trashDetector(object):
 
 	def __init__(self):
 		rospy.init_node("trash_detector_node", anonymous=True)
-		self.trash_status_pub = rospy.Publisher('trashbot/status', String, queue_size = 1)
+		self.trash_status_pub = rospy.Publisher('trash_detector/status', String, queue_size = 10)
 
 		self.bridge_object = CvBridge()
-		self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.camera_callback)
+		self.image_sub = rospy.Subscriber("sensors/camera/rgb/image_raw", Image, self.image_callback)
 		self.frame = None
 
 		# cascade
@@ -40,7 +41,7 @@ class trashDetector(object):
 		if self.frame == None:
 			return
 
-		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 		cups = self.cups_cascade.detectMultiScale(gray, scaleFactor=1.2, minSize=(20, 20))
 
 		# found trash
@@ -49,7 +50,7 @@ class trashDetector(object):
 		else:
 			self.trash_status_pub.publish("Found no trash")
 
-	def run():
+	def run(self):
 		# Detector will run at 10Hz just because
 		r = rospy.Rate(10)
 		while not rospy.is_shutdown():

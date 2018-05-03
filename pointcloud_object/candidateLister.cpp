@@ -18,6 +18,22 @@
 
 //template <typename PointT> class PointCloud;
 
+void cloudPrep(const  sensor_msgs::PointCloud2ConstPtr& input);
+void planeSegmenting();
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "candidate_detection");
+
+  ros::NodeHandle n;
+
+  ros::Subscriber sub = n.subscribe("segment_this_cloud", 1, cloudPrep);//keeps 1 cloud in queue to always get most recent
+
+  ros::spin();
+
+  return 0;
+}
+
 typedef pcl::PointXYZRGB PointT;
 typedef pcl::PointXYZ PointX;
 typedef pcl::PointCloud<PointT> PointCloudT;
@@ -100,15 +116,4 @@ void cloudPrep(const  sensor_msgs::PointCloud2ConstPtr& input)
 }
 
 
-int main(int argc, char **argv)
-{
-  ros::init(argc, argv, "candidate_detection");
 
-  ros::NodeHandle n;
-
-  ros::Subscriber sub = n.subscribe("/camera/depth/points", 1, cloudPrep);//keeps 1 cloud in queue to always get most recent
-
-  ros::spin();
-
-  return 0;
-}

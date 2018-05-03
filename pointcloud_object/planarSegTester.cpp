@@ -18,7 +18,7 @@
 
 typedef sensor_msgs::PointCloud2ConstPtr PointCloudSnsrMsg;
 
-PointCloudSnsrMsg cloud (new PointCloudSnsrMsg);
+PointCloudSnsrMsg cloud;
 
 
 void cloudPub(const  sensor_msgs::PointCloud2ConstPtr& input)
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   
   while(ros::ok())
   {
-          pub.publish(cloud);
+          pub.publish(*cloud);
           ros::spinOnce();
           
           loop_rate.sleep();
