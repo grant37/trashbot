@@ -8,8 +8,6 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from copy import deepcopy
 
-TRASH_CLASSIFIER = cv2.CascadeClassifier('cups.xml')
-
 class trashDetector(object):
 
 	def __init__(self):
