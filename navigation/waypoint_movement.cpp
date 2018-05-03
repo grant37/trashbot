@@ -6,12 +6,13 @@
 #include <actionlib/server/simple_action_server.h>
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseArray.h"
+#include <sensor_msgs/PointCloud.msg>
 
 #include <vector>
 
 #define PI 3.14159265359
 
-
+void start_search();
 
 //wait for next waypoint instruction
 void sleepok(int t, ros::NodeHandle &nh)
@@ -62,7 +63,10 @@ int turn_turtle_bot(double yaw)
 	
 	ac.sendGoal(goal);
 	ac.waitForResult();
+
+	return 0;
 }
+
 
 int main(int argc, char **argv)
 {
@@ -100,13 +104,35 @@ int main(int argc, char **argv)
 		//move to next location
 		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]);
 		
-		for (int p = 0; p < 3; p ++){
-			//call function to turn in a circle and search for trash
-			sleepok(//time,n);
-			move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]+(p+1)*PI/2);
+		for (int i = 0; i < 5; i ++){
+
+			// turn
+			move_turtle_bot(0, 0, 1.0);
+
+			ros::Publisher cloud_pub = n.advertise<sensor_msgs::PointCloud>("cloud", 50);
+  			ros::Rate loop_rate(10);
+
+  			unsigned int num_points = 100;
+
+		 	int count = 0;
+		  	ros::Rate r(1.0);
+		  	while(n.ok()){
+		    	sensor_msgs::PointCloud cloud;
+		    	cloud.header.stamp = ros::Time::now();
+		    	cloud.header.frame_id = "sensor_frame";
+
+		    	cloud.points.resize(num_points);
+
+		    	cloud_pub.publish(cloud);
+		    	++count;
+		    	r.sleep();
+		  	}
+
+			sleepok(10,n);
+		
 		}
 		
-		sleepok(10,n);
+		//sleepok(10,n);
 
 		
 		//increment location 
