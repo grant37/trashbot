@@ -4,6 +4,7 @@
 #include <tf/transform_listener.h>
 #include <sensor_msgs/PointCloud2.h>
 // PCL specific includes
+#include <pcl_ros/point_cloud.h>
 #include <pcl_ros/impl/transforms.hpp>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
