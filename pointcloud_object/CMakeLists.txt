@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(trashbot)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -7,7 +7,7 @@ project(trashbot)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS tf roscpp std_msgs sensor_msgs)
 find_package(PCL 1.3  REQUIRED COMPONENTS common io)
 
 ## System dependencies are found with CMake's conventions
@@ -191,6 +191,11 @@ add_definitions(${PCL_DEFINITIONS})
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
-add_executable(candidateLister ${PROJECT_SOURCE_DIR}/candidateLister.cpp)
-target_link_libraries(candidateLister ${catkin_LIBRARIES} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
+
+add_executable(candidate_detection_tester planarSegTester.cpp)
+add_executable(candidateLister candidateLister.cpp)
+target_link_libraries(candidateLister ${catkin_LIBRARIES} ${PCL_LIBARIES} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} pcl_sample_consensus pcl_segmentation)
+#target_link_libraries(candidateLister ${PCL_LIBARIES} )
+#target_link_libraries(candidateLister ${PCL_COMMON_LIBRARIES} )
+#target_link_libraries(candidateLister ${PCL_IO_LIBRARIES})
 # catkin_add_nosetests(test)
