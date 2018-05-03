@@ -21,7 +21,7 @@ class trashDetector(object):
 
 	def __init__(self):
 		rospy.init_node("trash_detector_node", anonymous=True)
-		self.trash_status_pub = rospy.Publisher('trash_detector/status', String, queue_size = 1)
+		self.trash_status_pub = rospy.Publisher('trash_detector/status', String, queue_size = 10)
 
 		self.bridge_object = CvBridge()
 		self.image_sub = rospy.Subscriber("sensors/camera/rgb/image_raw", Image, self.image_callback)
@@ -41,7 +41,7 @@ class trashDetector(object):
 		if self.frame == None:
 			return
 
-		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 		cups = self.cups_cascade.detectMultiScale(gray, scaleFactor=1.2, minSize=(20, 20))
 
 		# found trash
