@@ -29,6 +29,12 @@ typedef pcl::PointCloud<PointX> PointCloudX;
 
 PointCloudX::Ptr cloud (new PointCloudX);
 
+  //Creating container for transformedCloud
+	boost::shared_ptr<PointCloudT> transformedCloud;
+	
+	//Check: 
+	boost::shared_ptr<tf::TransformListener> listener;
+
 void planeSegmenting(){
 	  std::cerr << "Inside planeSegmenting" << std::endl;
          double distThresh = 10;
@@ -53,7 +59,9 @@ void planeSegmenting(){
 	  seg.setMaxIterations (1000);
 	  seg.setDistanceThreshold (0.01);
                 //cloud needs to by xyz not xyzrgb
-	  seg.setInputCloud (cloud);
+      boost::shared_ptr<PointCloudX> tmp = boost::make_shared<PointCloudX>();
+      pcl::copyPointCloud(*tmp, *transformedCloud);
+	  seg.setInputCloud (tmp);
 	  seg.segment (*inliers, *coefficients);
 
 	  if (inliers->indices.size () == 0)
@@ -88,24 +96,23 @@ void cloudPrep(const  sensor_msgs::PointCloud2ConstPtr& input)
         
 	pcl::fromROSMsg(*input, inputPCL);     
            std::cerr << "Converted to pcl" << std::endl;
-        //Creating container for transformedCloud
-	PointCloudT transformedCloud;
-
+      
+	
         //destination frame: /map/odom/base_footprint/base_link
-        const std::string destFrame = "/map->/odom->/base_footprint->/base_link";
+        const std::string destFrame = "/base_link";
         
 	//Transform to baselink frame
-	tf::TransformListener listener;
-	//listener.waitForTransform(destFrame, inputPCL.header.frame_id, ros::Time::now(), ros::Duration(0.1));
-	bool transformed = pcl_ros::transformPointCloud<PointT>(destFrame, inputPCL, transformedCloud, listener);
+	ros::Time t = ros::Time::now();
+	listener->waitForTransform(destFrame, "camera_rgb_optical_frame", t, ros::Duration(1));
+	std::cerr << "Waited for TF" << std::endl;
+	bool transformed = pcl_ros::transformPointCloud<PointT>(destFrame, inputPCL, *transformedCloud, *listener);
         //http://docs.ros.org/kinetic/api//html/namespacepcl__ros.html#aad1ce4ad90ab784aae6158419ad54d5f
         
 	//error catching transform
 	std::cerr<<"Transformed?: " << transformed << std::endl;
-	
-    if(transformedCloud.size() > 0){
+	std::cerr << "cloud size before call: " << transformedCloud->size() << std::endl;
+    if(transformedCloud->size() > 0){
 		    planeSegmenting();
-
 	}    
   	std::cerr << "End cloudPrep" << std::endl;
 }
@@ -117,6 +124,9 @@ int main(int argc, char **argv)
   
   ros::NodeHandle n;
   
+  listener = boost::make_shared<tf::TransformListener>();
+  transformedCloud = boost::make_shared<PointCloudT>();
+  
   ros::Subscriber sub = n.subscribe("segment_this_cloud", 1, cloudPrep);//keeps 1 cloud in queue to always get most recent
 
   ros::spin();
@@ -125,4 +135,3 @@ int main(int argc, char **argv)
 
   return 0;
 }
-
