@@ -6,13 +6,15 @@
 #include <actionlib/server/simple_action_server.h>
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseArray.h"
-#include <sensor_msgs/PointCloud.msg>
+#include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/Image.h>
+#include <image_transport/image_transport.h>
 
 #include <vector>
 
 #define PI 3.14159265359
 
-void start_search();
+void publish_image();
 
 //wait for next waypoint instruction
 void sleepok(int t, ros::NodeHandle &nh)
@@ -26,7 +28,7 @@ void sleepok(int t, ros::NodeHandle &nh)
 int move_turtle_bot (double x, double y, double yaw)
 {
 	
-	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base",true);
+	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
   	ac.waitForServer(); //wait to make sure the service is there
    	move_base_msgs::MoveBaseGoal goal;
  
@@ -55,23 +57,25 @@ int move_turtle_bot (double x, double y, double yaw)
 }
 
 
-//turn in a circle
-int turn_turtle_bot(double yaw)
-{
-	//set new yaw goal 
-	goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw + 2*PI);
-	
-	ac.sendGoal(goal);
-	ac.waitForResult();
-
-	return 0;
-}
+////turn in a circle
+//int turn_turtle_bot(double yaw)
+//{
+//    //set new yaw goal
+//    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw + 2*PI);
+//
+//    ac.sendGoal(goal);
+//    ac.waitForResult();
+//
+//    return 0;
+//}
 
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "move_base_client");
 	ros::NodeHandle n;
+    
+    ros::Publisher image_pub = n.advertise<sensor_msgs::Image>("camera/rgb/image_raw", 50)
 
 
 
@@ -104,42 +108,51 @@ int main(int argc, char **argv)
 		//move to next location
 		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]);
 		
+        ros::Rate loop_rate(1.0);
 		for (int i = 0; i < 5; i ++){
 
 			// turn
 			move_turtle_bot(0, 0, 1.0);
 
-			ros::Publisher cloud_pub = n.advertise<sensor_msgs::PointCloud>("cloud", 50);
-  			ros::Rate loop_rate(10);
+			// ros::Publisher cloud_pub = n.advertise<sensor_msgs::PointCloud>("cloud", 50);
+            
+  			
 
-  			unsigned int num_points = 100;
+//              unsigned int num_points = 100;
 
 		 	int count = 0;
 		  	ros::Rate r(1.0);
 		  	while(n.ok()){
-		    	sensor_msgs::PointCloud cloud;
-		    	cloud.header.stamp = ros::Time::now();
-		    	cloud.header.frame_id = "sensor_frame";
-
-		    	cloud.points.resize(num_points);
-
-		    	cloud_pub.publish(cloud);
+                
+//                sensor_msgs::PointCloud cloud;
+//                cloud.header.stamp = ros::Time::now();
+//                cloud.header.frame_id = "sensor_frame";
+//
+//                cloud.points.resize(num_points);
+//
+//                cloud_pub.publish(cloud);
+                
+                sensor_msgs::Image view;
+                view.header.stamp = ros::Time::now();
+                view.header.frame_id = "camera/rgb/image_raw";
+                
+                image_pub.publish(view);
+                
 		    	++count;
 		    	r.sleep();
 		  	}
 
-			sleepok(10,n);
+            loop_rate.sleep();
+        }
 		
-		}
-		
-		//sleepok(10,n);
+		sleepok(10,n);
 
 		
-		//increment location 
+		// increment location
 		c++;
 
-		//allows loop to run continuously
-		if (c >= num_locations){
+		// allows loop to run continuously
+		if (c >= num_locations) {
 			c = 0;
 		}
 	}
