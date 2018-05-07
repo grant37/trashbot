@@ -73,12 +73,14 @@ int main(int argc, char **argv)
 	// check the locations on the map to make sure they match
 	// back right corner of the lab
 	double home_location[3] =  {11.28, 24.77, 0.0}    // {5.65, 13.8, 0.0};
+
+	double current_location = home_location;
 	
 	// int num_locations = 7;
 	// double locations[7][3] = { {21.7,13.7,0.0}, {21.8,5.9,0.0}, {-0.329,6.21,0.0}, {1.0,13.6,0.0}, {5.65,13.8,0.0}, {7.5,9.8,0.0}, {21.3,19.5,0.0} };
 	
 	int num_locations = 2;
-	double locations[2][3] = {{11.28, 24.77, 0.0}, {13.00, 22.44, 0.0} } // back and forth in the lab
+	double locations[2][3] = {{13.00, 22.44, 0.0} , {11.28, 24.77, 0.0}} // back and forth in the lab
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base",true);
 	ac.waitForServer();
@@ -93,13 +95,14 @@ int main(int argc, char **argv)
 		
 		//move to next location
 		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]);
+		current_location = locations[c];
 		
         ros::Rate loop_rate(1.0);
 
 		for (int i = 0; i < 5; i ++){
 
 			// turn
-			move_turtle_bot(0, 0, 1.0);
+			move_turtle_bot(current_location[0], current_location[1], 1.0);
             
 		 	int count = 0;
 		  	ros::Rate r(1.0);
