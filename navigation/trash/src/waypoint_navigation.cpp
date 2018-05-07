@@ -25,7 +25,7 @@ void sleepok(int t, ros::NodeHandle &nh)
 
 
 //move to desired location
-int move_turtle_bot (double x, double y, double yaw)
+int move_turtle_bot (double x, double y, double yaw, bool turn)
 {
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
@@ -37,7 +37,11 @@ int move_turtle_bot (double x, double y, double yaw)
 	
 	// set the header
     goal.target_pose.header.stamp = ros::Time::now();
-	goal.target_pose.header.frame_id = "/map";
+
+    if (!turn) 
+		goal.target_pose.header.frame_id = "/map";
+	else
+		goal.target_pose.header.frame_id = "/base_link";
   
 	// set relative x, y, and angle
 	goal.target_pose.pose.position.x = x;
@@ -94,7 +98,7 @@ int main(int argc, char **argv)
 	while (ros::ok()) {
 		
 		//move to next location
-		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]);
+		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2], false);
 		current_location = locations[c];
 		
         ros::Rate loop_rate(1.0);
@@ -102,7 +106,7 @@ int main(int argc, char **argv)
 		for (int i = 0; i < 5; i ++){
 
 			// turn
-			move_turtle_bot(current_location[0], current_location[1], 1.0);
+			move_turtle_bot(0.0, 0.0, PI/6, true);
             
 		 	int count = 0;
 		  	ros::Rate r(1.0);
