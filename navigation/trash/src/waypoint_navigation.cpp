@@ -16,7 +16,7 @@
 
 void publish_image();
 
-//wait for next waypoint instruction
+// wait for next waypoint instruction
 void sleepok(int t, ros::NodeHandle &nh)
 {
 	if (nh.ok())
@@ -24,38 +24,39 @@ void sleepok(int t, ros::NodeHandle &nh)
 }
 
 
-//move to desired location
+// move to desired location
 int move_turtle_bot (double x, double y, double yaw, bool turn)
 {
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
-  	ac.waitForServer(); //wait to make sure the service is there
+  	ac.waitForServer(); // wait to make sure the service is there
    	move_base_msgs::MoveBaseGoal goal;
  
 	
 	std::cerr << "Going to :" << x  << y;
 	
-	//set the header
-    	goal.target_pose.header.stamp = ros::Time::now();
-    	
-    	if (!turn)
-			goal.target_pose.header.frame_id = "/map";
-		else
-			goal.target_pose.header.frame_id = "base_link";
-	  
-    	//set relative x, y, and angle
-    	goal.target_pose.pose.position.x = x;
-    	goal.target_pose.pose.position.y = y;
-    	goal.target_pose.pose.position.z = 0.0;
-    	goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw);
+	// set the header
+	goal.target_pose.header.stamp = ros::Time::now();
+	
+	// specify frame
+	if (!turn)
+		goal.target_pose.header.frame_id = "/map";
+	else
+		goal.target_pose.header.frame_id = "base_link";
+  
+	//set relative x, y, and angle
+	goal.target_pose.pose.position.x = x;
+	goal.target_pose.pose.position.y = y;
+	goal.target_pose.pose.position.z = 0.0;
+	goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw);
 
-	//send the goal
-    	ac.sendGoal(goal);
-    
-    	//block until the action is completed
-    	ac.waitForResult();
-    	//std::cout<<"\n \n waiting for " << sleep_time<<" seconds \n \n";
-    	//sleep(sleep_time);
+	// send the goal
+	ac.sendGoal(goal);
+
+	//block until the action is completed
+	ac.waitForResult();
+	//std::cout<<"\n \n waiting for " << sleep_time<<" seconds \n \n";
+	//sleep(sleep_time);
   
   	return 0;
 }
@@ -71,14 +72,14 @@ int main(int argc, char **argv)
 	std::cerr << "Publishing image..." << std::endl;
 
 
-	//the order is:
+	// the order is:
 	// 0: right outside lab
 	// 1: right outside collaborative lounge
 	// 2: right outside kitchenette
 	// 3: close to entrnace stairs
 	
 
-//check the locations on the map to make sure they match
+	//check the locations on the map to make sure they match
 	double home_location[3] = {12.70,24.27,0.0};
 	
 	int num_locations = 2;
@@ -97,8 +98,8 @@ int main(int argc, char **argv)
 	
 	while (ros::ok()) {
 		
-		//move to next location
-		//move_turtle_bot(locations[c][0],locations[c][1],locations[c][2], false);
+		// move to next location
+		// move_turtle_bot(locations[c][0],locations[c][1],locations[c][2], false);
 		
         ros::Rate loop_rate(10);
 		for (int i = 0; i < 12; i ++){
@@ -109,15 +110,14 @@ int main(int argc, char **argv)
   			
 		 	int count = 0;
 		  	ros::Rate r(1.0);
-				
-                std::cerr << "while n.ok" << std::endl;        
-                sensor_msgs::Image view;
-                view.header.stamp = ros::Time::now();
-                view.header.frame_id = "camera/rgb/image_raw";
-                
-                image_pub.publish(view);
-                
-		    	++count;
+				     
+            sensor_msgs::Image view;
+            view.header.stamp = ros::Time::now();
+            view.header.frame_id = "camera/rgb/image_raw";
+            
+            image_pub.publish(view);
+            
+	    	++count;
 
             loop_rate.sleep();
         }
@@ -137,5 +137,4 @@ int main(int argc, char **argv)
 	}
 	 
 	return 0;
-
 }
