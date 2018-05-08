@@ -68,8 +68,10 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "move_base_client");
 	ros::NodeHandle n;
     
-    ros::Publisher image_pub = n.advertise<sensor_msgs::Image>("camera/rgb/image_raw", 50);
-	std::cerr << "Publishing image..." << std::endl;
+    // ros::Publisher image_pub = n.advertise<sensor_msgs::Image>("camera/rgb/image_raw", 50);
+	// std::cerr << "Publishing image..." << std::endl;
+
+	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
 
 
 	// the order is:
@@ -84,9 +86,6 @@ int main(int argc, char **argv)
 	
 	int num_locations = 2;
 	double locations[2][3] = { {13.00,24.77,0.0}, {12.70, 24.27, 0.0} };
-	
-	
-
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base",true);
 	ac.waitForServer(); //wait to make sure the service is there
@@ -109,13 +108,21 @@ int main(int argc, char **argv)
 			move_turtle_bot(0.0, 0.0, PI/4, true);            
   			
 		 	int count = 0;
-		  	ros::Rate r(1.0);
 				     
-            sensor_msgs::Image view;
-            view.header.stamp = ros::Time::now();
-            view.header.frame_id = "camera/rgb/image_raw";
+            // sensor_msgs::Image view;
+            // view.header.stamp = ros::Time::now();
+            // view.header.frame_id = "camera/rgb/image_raw";
             
-            image_pub.publish(view);
+            // image_pub.publish(view);
+
+            ros::Time startTime = ros::Time::now();
+            ros::Duration seconds_to_spend = ros::Duration(4);
+            ros::Time endTime = seconds_to_spend + startTime;
+
+            while(ros::Time::now() < endTime) {
+            	init_check.publish(true);
+            	ros::Duration(0.1).sleep();
+            }
             
 	    	++count;
 
