@@ -13,6 +13,7 @@ import cv2
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
 from std_msgs.msg import String
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from copy import deepcopy
