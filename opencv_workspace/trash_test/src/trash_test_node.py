@@ -21,7 +21,7 @@ class trashDetector(object):
 
 	def __init__(self):
 		rospy.init_node("trash_detector_node", anonymous=True)
-		self.trash_status_pub = rospy.Publisher('trash_detector/status', String, queue_size = 10)
+		self.trash_status_pub = rospy.Publisher('trash_detector/status', Bool, queue_size = 10)
 
 		self.bridge_object = CvBridge()
 		self.image_sub = rospy.Subscriber("camera/rgb/image_raw", Image, self.image_callback)
@@ -47,9 +47,9 @@ class trashDetector(object):
 
 		# found trash
 		if len(cups):
-			self.trash_status_pub.publish("Found {} trash,".format(len(cups)))
+			self.trash_status_pub.publish(True)
 		else:
-			self.trash_status_pub.publish("Found no trash")
+			self.trash_status_pub.publish(False)
 			print("found no trash")
 
 	def run(self):
