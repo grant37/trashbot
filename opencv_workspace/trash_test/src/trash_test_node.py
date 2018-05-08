@@ -25,19 +25,30 @@ class trashDetector(object):
 		self.trash_status_pub = rospy.Publisher('trash_detector/status', Bool, queue_size = 10)
 
 		self.bridge_object = CvBridge()
-		self.image_sub = rospy.Subscriber("camera/rgb/image_raw", Image, self.image_callback)
+		self.image_sub = None
+		self.check_sub = rospy.Subscriber("search_with_cv", Bool, self.check_callback)
 		self.frame = None
 
 		# cascade
 		self.cups_cascade = cv2.CascadeClassifier("~/catkin_ws/src/trashbot/opencv_workspace/data/cascade.xml")
 
 	def image_callback(self, data):
-		print("called calback")
+		print("called img calback")
 		try:
 			#bgr8 is default opencv encoding
 			self.frame = self.bridge_object.imgmsg_to_cv2(data, desired_encoding="bgr8")
 		except CvBridgeError as e:
 			print(e)
+
+	def check_callback(self, data):
+		print("called check callback")
+		r = rospy.Rate(10)
+		while (data == True):
+			self.img_sub = rospy.Subscriber("camera/rgb/image_raw", Image, self.image_callback)
+			r.sleep()
+		self.img_sub.shutdown()
+		self.img_sub = None
+
 
 	def detect_trash(self):
 		if self.frame == None:
@@ -51,7 +62,7 @@ class trashDetector(object):
 			self.trash_status_pub.publish(True)
 		else:
 			self.trash_status_pub.publish(False)
-			print("found no trash")
+		#	print("found no trash")
 
 	def run(self):
 		# Detector will run at 10Hz just because
@@ -64,7 +75,7 @@ class trashDetector(object):
 def main():
 	trash_detector = trashDetector()
 	try:
-			trash_detector.run()
+		trash_detector.run()
 	except KeyboardInterrupt:
 		print("Closing...")
 

@@ -123,6 +123,8 @@ int main(int argc, char **argv)
             	init_check.publish(true);
             	ros::Duration(0.1).sleep();
             }
+
+            init_check.publish(false); // tell trash_detector to stop looking
             
 	    	++count;
 
