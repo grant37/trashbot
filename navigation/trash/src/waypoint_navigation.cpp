@@ -17,7 +17,19 @@
 
 #define PI 3.14159265359
 
-void publish_image();
+class detectionListener
+{
+public:
+	void detector_callback(std_msgs::Bool data);
+	bool detectionResult;
+}
+
+detectionListener::detector_callback(std_msgs::Bool data) {
+
+	this.detectionResult = data.data;
+
+}
+
 
 // wait for next waypoint instruction
 void sleepok(int t, ros::NodeHandle &nh)
@@ -69,7 +81,6 @@ int move_turtle_bot (double x, double y, double yaw, bool turn)
   	return 0;
 }
 
-
 // the order is:
 // 0: right outside lab
 // 1: right outside collaborative lounge
@@ -87,6 +98,10 @@ int main(int argc, char **argv)
 	search.data = false;
 
 	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
+
+	detectionListener listener;
+
+	ros::Subsciber trash_sub = n.subscribe("trash_detector/status", 10, &detectionListener::detector_callback, &listener);
 
 	// don't look for trash while wandering the halls
 	init_check.publish(search);
