@@ -11,6 +11,7 @@
 #include <image_transport/image_transport.h>
 
 #include <vector>
+#include <navigation/waypoint_destinations.h>
 
 #define PI 3.14159265359
 
@@ -75,23 +76,16 @@ int main(int argc, char **argv)
     
     ros::Publisher image_pub = n.advertise<sensor_msgs::Image>("camera/rgb/image_raw", 50)
 
-
-
-	//the order is:
-	// 0: right outside lab
-	// 1: right outside collaborative lounge
-	// 2: right outside kitchenette
-	// 3: close to entrnace stairs
-	
-
-//check the locations on the map to make sure they match
 	double home_location[3] = {5.65,13.8,0.0};
+	double locations[waypoint_destination.num_locations][3] 
 	
-	int num_locations = 7;
-	double locations[7][3] = { {21.7,13.7,0.0},{21.8,5.9,0.0},{-0.329,6.21,0.0},{1.0,13.6,0.0},	{5.65,13.8,0.0},{7.5,9.8,0.0},{21.3,19.5,0.0} };
-	
-	
+	for (int j = 0, j < waypoint_destination,num_locations, j ++){
+		location[j][1] = location_point[j][1];
+		location[j][2] = location_point[j][2];
+		location[j][3] = location_point[j][3];
+	}
 
+	
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base",true);
 	ac.waitForServer(); //wait to make sure the service is there
@@ -106,9 +100,17 @@ int main(int argc, char **argv)
 		//move to next location
 		move_turtle_bot(locations[c][0],locations[c][1],locations[c][2]);
 		
+		ros::Subscriber pos_candidates = n.subscribe("/geometry_msgs",1000, Candidates);
         ros::Rate loop_rate(1.0);
 		for (int i = 0; i < 5; i ++){
 
+			//get coordinates of candidate locations
+			//geometry_msgs.Pose.Candidates = new_goal;
+			
+			//move towards candidates
+			//move_turtle_bot(new_goal.x,new_goal.y,0.0);
+			
+			
 			// turn
 			move_turtle_bot(0, 0, 1.0);
 
@@ -139,7 +141,7 @@ int main(int argc, char **argv)
 		    	++count;
 		    	r.sleep();
 		  	}
-
+					
             loop_rate.sleep();
         }
 		
