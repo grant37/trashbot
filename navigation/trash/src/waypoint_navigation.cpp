@@ -24,7 +24,7 @@ public:
 	bool detectionResult;
 }
 
-detectionListener::detector_callback(std_msgs::Bool data) {
+void detectionListener::detector_callback(std_msgs::Bool data) {
 
 	this.detectionResult = data.data;
 
