@@ -10,6 +10,7 @@
 #include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 
 #include <vector>
 
@@ -109,7 +110,7 @@ int main(int argc, char **argv)
 		while (i < 12){
 			i++;
 			std::cerr << "rotate behavior /n" << std::endl;
-			std::cerr << i << std::endl
+			std::cerr << i << std::endl;
 
 			search.data = true;
             init_check.publish(search); // tell trash_detector to start looking
