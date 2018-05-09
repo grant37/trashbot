@@ -57,7 +57,7 @@ class trashDetector(object):
 		gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 		cups = self.cups_cascade.detectMultiScale(gray, scaleFactor=1.2, minSize=(20, 20))
 
-		msg = std_msgs.msg.Bool()
+		msg = Bool
 
 		# found trash
 		if len(cups):
