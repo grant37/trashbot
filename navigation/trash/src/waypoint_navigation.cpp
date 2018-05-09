@@ -12,6 +12,8 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
 #include <math.h>
+#include <ros/ros.h>
+#include <visualization_msgs/Marker.h>
 
 #include <vector>
 
@@ -90,18 +92,29 @@ int move_turtle_bot (double x, double y, double yaw, bool turn)
 int main(int argc, char **argv)
 {
 	
-	std::cerr << "starting up..." << std::endl;
 	ros::init(argc, argv, "move_base_client");
 	ros::NodeHandle n;
 
 	std_msgs::Bool search;
 	search.data = false;
 
-	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
+	visualization_msgs::Marker marker;
+    // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+    marker.header.frame_id = "/map";
+    marker.header.stamp = ros::Time::now();
+    marker.ns = "basic_shapes";
+    marker.id = 0;
+    uint32_t shape = visualization_msgs::Marker::CUBE;
+    marker.action = visualization_msgs::Marker::ADD;
 
+
+    // trash detection handle
 	detectionListener listener;
+	ros::Subsciber trash_sub;
 
-	ros::Subsciber trash_sub = n.subscribe("trash_detector/status", 10, &detectionListener::detector_callback, &listener);
+	// publishers
+	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
+	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
 	// don't look for trash while wandering the halls
 	init_check.publish(search);
@@ -132,6 +145,7 @@ int main(int argc, char **argv)
         int i = 0;
 
 		while (i < 12){
+			trash_sub = n.subscribe("trash_detector/status", 10, &detectionListener::detector_callback, &listener);
 			i++;
 			std::cerr << "rotate behavior /n" << std::endl;
 			std::cerr << i << std::endl;
@@ -141,6 +155,22 @@ int main(int argc, char **argv)
 
             loop_rate.sleep();
         }
+
+        if (listener.detectionResult) {
+        	std::cerr << "result" << std::endl;
+        	marker.pose.position.x = locations[c][0];
+   			marker.pose.position.y = locations[c][1];
+    		marker.pose.position.z = locations[c][2];
+    		marker.pose.orientation.x = 0.0;
+    		marker.pose.orientation.y = 0.0;
+    		marker.pose.orientation.z = 0.0;
+    		marker.pose.orientation.w = 1.0;
+
+    		ros::Subsciber marker_sub = n.subscribe("visualization_marker", 10);
+
+    		marker_pub.publish(marker);
+    	}
+
 
         // reset in order to roam again
         search.data = false;
