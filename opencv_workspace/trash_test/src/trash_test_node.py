@@ -43,7 +43,7 @@ class trashDetector(object):
 	def check_callback(self, data):
 		print("called check callback")
 		r = rospy.Rate(10)
-		while (data == True):
+		while (data.data == True):
 			self.img_sub = rospy.Subscriber("camera/rgb/image_raw", Image, self.image_callback)
 			r.sleep()
 		self.img_sub.shutdown()
@@ -57,11 +57,15 @@ class trashDetector(object):
 		gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 		cups = self.cups_cascade.detectMultiScale(gray, scaleFactor=1.2, minSize=(20, 20))
 
+		msg = std_msgs.msg.Bool()
+
 		# found trash
 		if len(cups):
-			self.trash_status_pub.publish(True)
+			msg.data = True
+			self.trash_status_pub.publish(msg)
 		else:
-			self.trash_status_pub.publish(False)
+			msg.data = False
+			self.trash_status_pub.publish(msg)
 		#	print("found no trash")
 
 	def run(self):
