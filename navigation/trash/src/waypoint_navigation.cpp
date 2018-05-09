@@ -11,6 +11,7 @@
 #include <image_transport/image_transport.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
+#include <math.h>
 
 #include <vector>
 
@@ -50,6 +51,11 @@ int move_turtle_bot (double x, double y, double yaw, bool turn)
 	goal.target_pose.pose.position.x = x;
 	goal.target_pose.pose.position.y = y;
 	goal.target_pose.pose.position.z = 0.0;
+
+	// set the orientation to face forward if we've moved forward but are using base_link
+	if ((x != 0 or y != 0) and turn)
+		yaw = atan(y/x);
+
 	goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw);
 
 	// send the goal
@@ -58,7 +64,7 @@ int move_turtle_bot (double x, double y, double yaw, bool turn)
 	//block until the action is completed
 	ac.waitForResult();
 	//std::cout<<"\n \n waiting for " << sleep_time<<" seconds \n \n";
-	//sleep(sleep_time);
+	sleep(1.0);
   
   	return 0;
 }
@@ -96,7 +102,11 @@ int main(int argc, char **argv)
 	move_base_msgs::MoveBaseGoal goal;
   
   	// track of locations	
-	int c = 0;  
+	int c = 0;
+
+	// set footprint hack
+
+	move_turtle_bot(0.5, 0.0, )
 	
 	while (ros::ok()) {
 		
