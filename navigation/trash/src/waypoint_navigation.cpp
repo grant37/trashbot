@@ -98,23 +98,13 @@ int main(int argc, char **argv)
 	std_msgs::Bool search;
 	search.data = false;
 
-	visualization_msgs::Marker marker;
-    // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/map";
-    marker.header.stamp = ros::Time::now();
-    marker.ns = "basic_shapes";
-    marker.id = 0;
-    uint32_t shape = visualization_msgs::Marker::CUBE;
-    marker.action = visualization_msgs::Marker::ADD;
-
-
     // trash detection handle
 	detectionListener listener;
 	ros::Subsciber trash_sub;
 
 	// publishers
 	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
-	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+	ros::Publisher pose_pub = n.advertise<geometry_msgs::Pose>("current_pose", 1);
 
 	// don't look for trash while wandering the halls
 	init_check.publish(search);
@@ -157,18 +147,18 @@ int main(int argc, char **argv)
         }
 
         if (listener.detectionResult) {
-        	std::cerr << "result" << std::endl;
-        	marker.pose.position.x = locations[c][0];
-   			marker.pose.position.y = locations[c][1];
-    		marker.pose.position.z = locations[c][2];
-    		marker.pose.orientation.x = 0.0;
-    		marker.pose.orientation.y = 0.0;
-    		marker.pose.orientation.z = 0.0;
-    		marker.pose.orientation.w = 1.0;
+        	geometry_msgs::Pose curr_pose;
+        	curr_pose.position.x = locations[c][0];
+   			curr_pose.position.y = locations[c][1];
+    		curr_pose.position.z = locations[c][2];
+    		curr_pose.orientation.x = 0.0;
+    		curr_pose.orientation.y = 0.0;
+    		curr_pose.orientation.z = 0.0;
+    		curr_pose.orientation.w = 1.0;
+
+    		pose_pub(curr_pose);
 
     		ros::Subsciber marker_sub = n.subscribe("visualization_marker", 10);
-
-    		marker_pub.publish(marker);
     	}
 
 

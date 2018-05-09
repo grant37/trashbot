@@ -1,5 +1,16 @@
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+#include "geometry_msgs/Pose.h"
+
+class PoseListener {
+  public:
+    void callback(geometry_msgs::Pose msg);
+    geometry_msgs::Pose pose;
+}
+
+void PoseListener::callback(geometry_msgs::Pose msg) {
+  this.pose = msg;
+}
 
 int main( int argc, char** argv )
 {
@@ -8,6 +19,9 @@ int main( int argc, char** argv )
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
+  PoseListener listener;
+  ros::Subscriber pose_sub = n.subscribe("current_pose", 1, &PoseListener::callback, &listener);
+
   // Set our initial shape type to be a cube
   uint32_t shape = visualization_msgs::Marker::CUBE;
 
@@ -15,7 +29,7 @@ int main( int argc, char** argv )
   {
     visualization_msgs::Marker marker;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/my_frame";
+    marker.header.frame_id = "/map";
     marker.header.stamp = ros::Time::now();
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
@@ -30,13 +44,13 @@ int main( int argc, char** argv )
     marker.action = visualization_msgs::Marker::ADD;
 
     // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-    marker.pose.position.x = 0;
-    marker.pose.position.y = 0;
-    marker.pose.position.z = 0;
-    marker.pose.orientation.x = 0.0;
-    marker.pose.orientation.y = 0.0;
-    marker.pose.orientation.z = 0.0;
-    marker.pose.orientation.w = 1.0;
+    marker.pose.position.x = listener.pose.position.x;
+    marker.pose.position.y = listener.pose.position.y;
+    marker.pose.position.z = listener.pose.position.z;
+    marker.pose.orientation.x = listener.pose.orientation.x;
+    marker.pose.orientation.y = listener.pose.orientation.y;
+    marker.pose.orientation.z = listener.pose.orientation.z;
+    marker.pose.orientation.w = listener.pose.orientation.w;
 
     // Set the scale of the marker -- 1x1x1 here means 1m on a side
     marker.scale.x = 1.0;
@@ -62,23 +76,6 @@ int main( int argc, char** argv )
       sleep(1);
     }
     marker_pub.publish(marker);
-
-    // Cycle between different shapes
-    switch (shape)
-    {
-    case visualization_msgs::Marker::CUBE:
-      shape = visualization_msgs::Marker::SPHERE;
-      break;
-    case visualization_msgs::Marker::SPHERE:
-      shape = visualization_msgs::Marker::ARROW;
-      break;
-    case visualization_msgs::Marker::ARROW:
-      shape = visualization_msgs::Marker::CYLINDER;
-      break;
-    case visualization_msgs::Marker::CYLINDER:
-      shape = visualization_msgs::Marker::CUBE;
-      break;
-    }
 
     r.sleep();
   }
