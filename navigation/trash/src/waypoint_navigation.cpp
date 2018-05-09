@@ -92,21 +92,20 @@ int main(int argc, char **argv)
 	init_check.publish(search);
 	
 	// Note! check the locations on the map to make sure they match
-	double home_location[3] = {12.70,24.27,0.0};
+	double home_location[3] = {12.70, 24.27, 0.0};
 	
 	int num_locations = 2;
-	double locations[2][3] = { {13.00,24.77,0.0}, {12.70, 24.27, 0.0} };
+	double locations[2][3] = { {13.00, 24.77, 0.0}, {12.70, 24.27, 0.0} };
 	
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base",true);
-	ac.waitForServer(); //wait to make sure the service is there
+	ac.waitForServer();
 	move_base_msgs::MoveBaseGoal goal;
   
   	// track of locations	
 	int c = 0;
 
 	// set footprint hack
-
-	move_turtle_bot(0.5, 0.0, )
+	move_turtle_bot(0.5, 0.0, 0.0, true);
 	
 	while (ros::ok()) {
 		
