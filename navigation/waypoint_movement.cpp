@@ -32,14 +32,12 @@ int move_turtle_bot (double x, double y, double yaw)
   	ac.waitForServer(); //wait to make sure the service is there
    	move_base_msgs::MoveBaseGoal goal;
  
-	
+	//print desired location
 	std::cout<<"Going to :"<< x  << y;
-	
-	//set the header
+
     	goal.target_pose.header.stamp = ros::Time::now();
     	goal.target_pose.header.frame_id = "/map";
 	  
-    	//set relative x, y, and angle
     	goal.target_pose.pose.position.x = x;
     	goal.target_pose.pose.position.y = y;
     	goal.target_pose.pose.position.z = 0.0;
