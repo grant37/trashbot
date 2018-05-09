@@ -22,7 +22,7 @@ class trashDetector(object):
 
 	def __init__(self):
 		rospy.init_node("trash_detector_node", anonymous=True)
-		self.trash_status_pub = rospy.Publisher('trash_detector/status', Bool, queue_size = 10)
+		self.trash_status_pub = rospy.Publisher('trash_detector/status', Bool, queue_size = 1)
 
 		self.bridge_object = CvBridge()
 		self.image_sub = None

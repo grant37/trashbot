@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 	ros::Subsciber trash_sub;
 
 	// publishers
-	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 50);
+	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 1);
 	ros::Publisher pose_pub = n.advertise<geometry_msgs::Pose>("current_pose", 1);
 
 	// don't look for trash while wandering the halls
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         int i = 0;
 
 		while (i < 12){
-			trash_sub = n.subscribe("trash_detector/status", 10, &detectionListener::detector_callback, &listener);
+			trash_sub = n.subscribe("trash_detector/status", 1, &detectionListener::detector_callback, &listener);
 			i++;
 			std::cerr << "rotate behavior /n" << std::endl;
 			std::cerr << i << std::endl;
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 
     		pose_pub(curr_pose);
 
-    		ros::Subsciber marker_sub = n.subscribe("visualization_marker", 10);
+    		ros::Subsciber marker_sub = n.subscribe("visualization_marker", 1);
     	}
 
 
