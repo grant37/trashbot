@@ -142,7 +142,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 
 add_executable(marker_node src/waypoint_navigation.cpp)
 add_dependencies(marker_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
- target_link_libraries(marker_node
+ target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES}
  )
 
