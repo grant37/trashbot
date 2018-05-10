@@ -136,7 +136,13 @@ include_directories(
 ## either from message generation or dynamic reconfigure
 add_executable(${PROJECT_NAME}_node src/waypoint_navigation.cpp)
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
- target_link_libraries(${PROJECT_NAME}_node
+ target_link_libraries(marker_node
+   ${catkin_LIBRARIES}
+ )
+
+add_executable(marker_node src/waypoint_navigation.cpp)
+add_dependencies(marker_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ target_link_libraries(marker_node
    ${catkin_LIBRARIES}
  )
 
