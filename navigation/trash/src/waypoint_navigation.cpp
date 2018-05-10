@@ -12,8 +12,8 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
 #include <math.h>
-#include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+
 
 #include <vector>
 
@@ -24,11 +24,17 @@ class detectionListener
 public:
 	void detector_callback(std_msgs::Bool data);
 	bool detectionResult;
-}
+};
 
 void detectionListener::detector_callback(std_msgs::Bool data) {
 
 	this.detectionResult = data.data;
+
+}
+
+void marker_callback(visualization_msgs::Marker marker) {
+
+	std::cout << "Subscribed to marker" << std::endl;
 
 }
 
@@ -100,7 +106,7 @@ int main(int argc, char **argv)
 
     // trash detection handle
 	detectionListener listener;
-	ros::Subsciber trash_sub;
+	ros::Subscriber trash_sub;
 
 	// publishers
 	ros::Publisher init_check = n.advertise<std_msgs::Bool>("search_with_cv", 1);
@@ -156,9 +162,9 @@ int main(int argc, char **argv)
     		curr_pose.orientation.z = 0.0;
     		curr_pose.orientation.w = 1.0;
 
-    		pose_pub(curr_pose);
+    		pose_pub.publish(curr_pose);
 
-    		ros::Subsciber marker_sub = n.subscribe("visualization_marker", 1);
+    		ros::Subscriber marker_sub = n.subscribe("visualization_marker", 1, marker_callback);
     	}
 
 

@@ -6,7 +6,7 @@ class PoseListener {
   public:
     void callback(geometry_msgs::Pose msg);
     geometry_msgs::Pose pose;
-}
+};
 
 void PoseListener::callback(geometry_msgs::Pose msg) {
   this.pose = msg;
