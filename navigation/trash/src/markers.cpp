@@ -9,7 +9,7 @@ class PoseListener {
 };
 
 void PoseListener::callback(geometry_msgs::Pose msg) {
-  this.pose = msg;
+  this->pose = msg;
 }
 
 int main( int argc, char** argv )
