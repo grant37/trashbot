@@ -33,7 +33,7 @@ $ rosrun trash waypoint_navigation_node
 $ python ~/turtlebot/src/trashtest/src/trash_test_node.py
 ```
 
-* Checl out the results!
+* Check out the results!
 
 
 
