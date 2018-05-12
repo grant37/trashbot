@@ -9,11 +9,12 @@
 ### To Run the Demo:
  * Start up amcl navigation.
 
-<addr> $ roslaunch turtlebot_bringup minimal.launch <addr>
-<addr $ roslaunch turtlebot_bringup minimal.launch>
-<addr $ roslaunch turtlebot_navigation amcl_demo.launch
-map_file:=<full path to your map YAML file>>
-<addr $ roslaunch turtlebot_rviz_launchers view_navigation.launch>
+''' $ roslaunch turtlebot_bringup minimal.launch
+$ roslaunch turtlebot_bringup minimal.launch
+$ roslaunch turtlebot_navigation amcl_demo.launch
+map_file:=<full path to your map YAML file>
+$ roslaunch turtlebot_rviz_launchers view_navigation.launch
+'''
 
 
 
