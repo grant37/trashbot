@@ -1,0 +1,1 @@
+/usr/bin/c++       "CMakeFiles/\$marker_node.dir/src/markers.cpp.o"  -o "/home/turtlebot/turtlebot/devel/lib/trash/\$$marker_node" -rdynamic 

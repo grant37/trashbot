@@ -1,0 +1,2 @@
+trash:trash_test
+-DCATKIN_DEVEL_PREFIX=/home/turtlebot/turtlebot/devel -DCMAKE_INSTALL_PREFIX=/home/turtlebot/turtlebot/install -G Unix Makefiles

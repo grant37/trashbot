@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/turtlebot/install
+
+Name: trash_test
+Description: Description of trash_test
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/turtlebot/turtlebot/install/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/turtlebot/install
+
+Name: trash
+Description: Description of trash
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/turtlebot/turtlebot/install/lib 
+Requires: 
