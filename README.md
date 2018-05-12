@@ -14,7 +14,7 @@ roslaunch turtlebot_bringup minimal.launch
 $ roslaunch turtlebot_navigation amcl_demo.launch
 map_file:=<full path to your map YAML file>
 $ roslaunch turtlebot_rviz_launchers view_navigation.launch
- <\addr>
+ <addr>
 
 
 
