@@ -2,12 +2,11 @@
 ### Intelligent Autonomous Robotics (Tufts COMP50) Project
 
 ###### This project continues to be a work in progress.
- We did not manage integration of the complete system within the class project
- timeframe. And as such, there is not a complete system which one can currently
- run. To run our current demo, please use the turtlebot workspace. In order to ensure that it works on a basic level, the naming for now has been left confusingly awkward.
+To run our current demo, please use the turtlebot workspace. In order to ensure that it works on a basic level, the naming for now is still a little awkward. Apologies.
 
 ### To Run the Demo:
 
+ * You need to be running ROS Indigo.
  * Clone just the 'turtlebot' workspace from this repository.
  * Enter the workspace and make the demo:
  ```
