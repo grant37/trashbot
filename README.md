@@ -3,7 +3,7 @@
 
 ###### This project continues to be a work in progress.
 To run our current demo, please use the turtlebot workspace. Refernce jsinapov's
-(https://github.com/jsinapov/tufts_service_robots:"tufts_service_robots").
+[tufts_service_robots](https://github.com/jsinapov/tufts_service_robots "tufts_service_robots").
 
 ### To Run the Demo:
 
