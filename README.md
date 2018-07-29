@@ -1,8 +1,7 @@
 # Trashbot
 ### Intelligent Autonomous Robotics (Tufts COMP50) Project
 
-###### This project continues to be a work in progress.
-To run our current demo, please use the turtlebot workspace. Refernce jsinapov's
+To run the current demo, please use the turtlebot workspace. Refernce jsinapov's
 [tufts_service_robots](https://github.com/jsinapov/tufts_service_robots "tufts_service_robots").
 
 ### To Run the Demo:
