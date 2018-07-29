@@ -2,7 +2,8 @@
 ### Intelligent Autonomous Robotics (Tufts COMP50) Project
 
 ###### This project continues to be a work in progress.
-To run our current demo, please use the turtlebot workspace. In order to ensure that it works on a basic level, the naming for now is still a little awkward. Apologies.
+To run our current demo, please use the turtlebot workspace. Refernce jsinapov's
+(https://github.com/jsinapov/tufts_service_robots:"tufts_service_robots").
 
 ### To Run the Demo:
 
@@ -31,8 +32,6 @@ $ rosrun trash waypoint_navigation_node
 ```
 $ python ~/turtlebot/src/trashtest/src/trash_test_node.py
 ```
-
-* Check out the results!
 
 
 
